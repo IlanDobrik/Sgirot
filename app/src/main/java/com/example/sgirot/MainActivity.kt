@@ -58,5 +58,10 @@ class MainActivity : AppCompatActivity()
         // TODO update DB
     }
 
+    fun settingsClick()
+    {
+        // TODO settings page - Low priority
+    }
+
     // TODO when to send data? every morning? on app close?
 }

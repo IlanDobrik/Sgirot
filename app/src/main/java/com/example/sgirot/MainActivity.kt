@@ -82,4 +82,9 @@ class MainActivity : AppCompatActivity()
     {
         // TODO settings page - Low priority
     }
+
+    fun nameChange()
+    {
+        // TODO update DB
+    }
 }

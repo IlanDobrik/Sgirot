@@ -1,7 +1,9 @@
 package com.example.sgirot
 
 import android.content.Context
+import android.provider.Settings
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.time.LocalDate
@@ -21,22 +23,22 @@ import kotlin.reflect.typeOf
 }
  */
 
-//data class Data{
-//    var info = mutableMapOf<Any,Any>()
-//    var settings = mutableMapOf<Any, Any>()
-//}
+data class Asd(
+    var Info: MutableMap<String, Boolean>,
+    var Settings: MutableMap<String, Int>,
+    var Name: String)
 
 class DB private constructor(context: Context) {
     private val file = File(context.filesDir, "Sgirot.bin")
-    public var data = mutableMapOf("Info" to mutableMapOf<Any,Any>(),
-        "Settings" to mutableMapOf<Any,Any>())
+    public var data = Asd(mutableMapOf(),
+        mutableMapOf(),
+        "Name")
 
     init {
         val x = file.createNewFile()
         if (!x){
             val gson = Gson()
-            val dataType = object : TypeToken<MutableMap<String, MutableMap<Any, Any>>>() {}.type
-            data = gson.fromJson(file.readText(), dataType)
+            data = gson.fromJson(file.readText(), Asd::class.java)
         }
     }
 
@@ -49,11 +51,6 @@ class DB private constructor(context: Context) {
 
             return instance!!
         }
-    }
-
-    fun addDate(localDate: LocalDate, sgira: Sgira)
-    {
-        data["Info"]?.put(localDate.toString(), sgira.toString())
     }
 
     fun save()

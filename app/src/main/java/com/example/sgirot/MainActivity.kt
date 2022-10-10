@@ -3,12 +3,16 @@ package com.example.sgirot
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
+import androidx.core.widget.doAfterTextChanged
+import com.google.gson.Gson
+import java.net.Socket
 import java.time.LocalDate
 
 import java.time.format.DateTimeFormatter
@@ -30,16 +34,17 @@ class MainActivity : AppCompatActivity()
     {
         val button = ToggleButton(this)
         button.setOnClickListener {
-            DB.getInstance(this).addDate(localDate, if (!button.isChecked) Sgira.Base else Sgira.Home )
+            DB.getInstance(this).data.Info[localDate.toString()] = button.isChecked
         }
 
         button.textOff = "Base"
         button.textOn = "Home"
         button.isChecked = defaultValue
 
-        if(DB.getInstance(this).data["Info"]?.contains(localDate.toString()) == true)
+        val info = DB.getInstance(this).data.Info
+        if(info.contains(localDate.toString()))
         {
-            button.isChecked = DB.getInstance(this).data["Info"]?.get(localDate.toString()) == "Home"
+            button.isChecked = info[localDate.toString()] == true
         }
 
 
@@ -49,6 +54,14 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Name
+        val name : EditText = findViewById(R.id.editTextTextPersonName)
+        val savedName = DB.getInstance(this).data.Name
+        name.setText(savedName)
+        name.doAfterTextChanged {
+            DB.getInstance(this).data.Name = name.text.toString()
+        }
 
         // Add rows
         val table = findViewById<View>(R.id.tableLayout) as TableLayout
@@ -74,17 +87,18 @@ class MainActivity : AppCompatActivity()
 
     override fun onStop() {
         super.onStop()
-        DB.getInstance(this).save()
-        // TODO send data
+
+        // Save data
+        val db = DB.getInstance(this)
+        db.save()
+
+        // TODO Send data
+//        val socket = Socket("localhost", 1111)
+//        socket.getOutputStream().write(Gson().toJson(db.data).toByteArray())
     }
 
     fun settingsClick()
     {
         // TODO settings page - Low priority
-    }
-
-    fun nameChange()
-    {
-        // TODO update DB
     }
 }

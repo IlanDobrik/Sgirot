@@ -1,13 +1,9 @@
 package com.example.sgirot
 
 import android.content.Context
-import android.provider.Settings
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
 import java.io.File
-import java.time.LocalDate
-import kotlin.reflect.typeOf
+import java.net.Socket
 
 /*
 {
@@ -29,12 +25,13 @@ data class Asd(
     var Name: String)
 
 class DB private constructor(context: Context) {
-    private val file = File(context.filesDir, "Sgirot.bin")
+    private val file = File(context.filesDir, FILE_NAME)
     public var data = Asd(mutableMapOf(),
         mutableMapOf(),
         "Name")
 
     init {
+        get_update()
         val x = file.createNewFile()
         if (!x){
             val gson = Gson()
@@ -58,5 +55,19 @@ class DB private constructor(context: Context) {
         val gson = Gson()
         file.writeText(gson.toJson(this.data))
     }
-}
 
+    fun get_update()
+    {
+        try {
+            // TODO pull data
+            val socket = Socket(IP, PORT)
+            socket.getOutputStream().write(Gson().toJson(this.data).toByteArray())
+
+            // TODO Write to DB
+        }
+        catch (e: Exception)
+        {
+            // Do nothing
+        }
+    }
+}

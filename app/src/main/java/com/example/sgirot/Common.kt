@@ -2,15 +2,14 @@ package com.example.sgirot
 
 import java.time.DayOfWeek
 
-public enum class Sgira(boolean: Boolean){
-    Base(false),
-    Home(true)
-}
+// Settings
+const val ROWS_COUNT = 6
+const val DEFAULT_VALUE = false
+const val IP = "localhost"
+const val PORT = 2513
+const val FILE_NAME = "Sgirot.bin"
 
-// TODO add to settings
-val rowsCount = 4
-val defaultValue = false
-
+// Utilities
 fun getWeekends() = sequence {
     var date = java.time.LocalDate.now()
     date = date.plusDays((DayOfWeek.values().size - date.dayOfWeek.value - 1).toLong())

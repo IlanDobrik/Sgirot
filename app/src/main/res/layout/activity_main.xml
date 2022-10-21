@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TableLayout
-        android:id="@+id/tableLayout"
+    <ListView
+        android:id="@+id/weekend_list"
         android:layout_width="369dp"
         android:layout_height="606dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,8 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.761">
-
-    </TableLayout>
+    </ListView>
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -27,7 +26,7 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintBottom_toTopOf="@+id/weekend_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

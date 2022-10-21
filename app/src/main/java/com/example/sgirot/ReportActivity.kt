@@ -8,7 +8,7 @@ class ReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
 
-        // TODO pull data from server
+        // TODO Pass DB
         // TODO set text
     }
 }

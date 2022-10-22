@@ -1,16 +1,14 @@
 package com.example.sgirot
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.EditText
+import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.google.gson.Gson
 import java.net.Socket
-import java.time.LocalDate
-
-import java.time.format.DateTimeFormatter
 
 
 class MainActivity : AppCompatActivity()
@@ -43,8 +41,20 @@ class MainActivity : AppCompatActivity()
         db.save()
 
         // TODO Send data
-//        val socket = Socket(IP, PORT)
-//        socket.getOutputStream().write(Gson().toJson(db.data).toByteArray())
+        val thread = Thread {
+            try {
+                sendData(Gson().toJson(db.data).toByteArray())
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+        thread.start()
+    }
+
+    fun sendData(byteArray: ByteArray)
+    {
+        val socket = Socket(IP, PORT)
+        socket.getOutputStream().write(byteArray)
     }
 
     fun settingsClick()

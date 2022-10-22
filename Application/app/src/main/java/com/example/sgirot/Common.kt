@@ -5,7 +5,7 @@ import java.time.DayOfWeek
 // Settings
 const val ROWS_COUNT = 6
 const val DEFAULT_VALUE = false
-const val IP = "localhost"
+const val IP = "10.0.2.2"
 const val PORT = 2513
 const val FILE_NAME = "Sgirot.bin"
 

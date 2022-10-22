@@ -10,38 +10,6 @@ import android.widget.ToggleButton
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/*
-private fun dateText(localDate: LocalDate) : TextView
-    {
-        val dateText = TextView(this)
-        val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
-        dateText.text = "%s - %s".format(localDate.minusDays(2).format(dateFormatter),
-            localDate.format(dateFormatter))
-        // TODO style?
-        return dateText
-    }
-
-    private fun homeBaseButton(localDate: LocalDate) : ToggleButton
-    {
-        val button = ToggleButton(this)
-        button.setOnClickListener {
-            DB.getInstance(this).data.Info[localDate.toString()] = button.isChecked
-        }
-
-        button.textOff = "Base"
-        button.textOn = "Home"
-        button.isChecked = DEFAULT_VALUE
-
-        val info = DB.getInstance(this).data.Info
-        if(info.contains(localDate.toString()))
-        {
-            button.isChecked = info[localDate.toString()] == true
-        }
-
-        return button
-    }
- */
-
 class MyAdapter(private val context: Context, private val weekends: List<LocalDate>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

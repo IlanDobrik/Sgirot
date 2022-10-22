@@ -6,7 +6,7 @@ IP = "0.0.0.0"
 PORT = 2513
 DEFAULT_BUFFER_SIZE = 1024
 LISTEN_COUNT = 5
-FILE_PATH = "./sgirot.bin"
+FILE_PATH = "./Sgirot.bin"
 
 '''
 C:  GET/POST

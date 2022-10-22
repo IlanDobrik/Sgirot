@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity()
         val db = DB.getInstance(this)
         db.save()
 
-        // TODO Send data
+        // Send data - Cant do on main thread
         val thread = Thread {
             try {
                 sendData(Gson().toJson(db.data).toByteArray())
@@ -49,12 +49,6 @@ class MainActivity : AppCompatActivity()
             }
         }
         thread.start()
-    }
-
-    fun sendData(byteArray: ByteArray)
-    {
-        val socket = Socket(IP, PORT)
-        socket.getOutputStream().write(byteArray)
     }
 
     fun settingsClick()

@@ -1,5 +1,6 @@
 package com.example.sgirot
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.ToggleButton
+import org.w3c.dom.Text
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class MyAdapter(private val context: Context, private val weekends: List<LocalDate>) : BaseAdapter() {
+class MyAdapter(private val context: Context, private val weekends: List<String>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -23,33 +25,31 @@ class MyAdapter(private val context: Context, private val weekends: List<LocalDa
         return position.toLong()
     }
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, container: ViewGroup?): View? {
         val weekendListView = inflater.inflate(R.layout.weekend_list_entry, container, false)
-        dateText(weekendListView.findViewById(R.id.weekendText), this.weekends[position])
+
+        // Weekend Text
+        val weekendText : TextView = weekendListView.findViewById(R.id.weekendText)
+        weekendText.text = this.weekends[position]
+
         sgiraButton(weekendListView.findViewById(R.id.sgiraButton), this.weekends[position])
         return weekendListView
     }
 
-    private fun dateText(dateText: TextView, localDate: LocalDate)
+    private fun sgiraButton(toggleButton: ToggleButton, date: String)
     {
-        val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
-        dateText.text = "%s - %s".format(localDate.minusDays(2).format(dateFormatter),
-            localDate.format(dateFormatter))
-        // TODO style?
-    }
-
-    private fun sgiraButton(toggleButton: ToggleButton, localDate: LocalDate)
-    {
+        val data = DB.getInstance(this.context).data
         toggleButton.setOnClickListener {
-            DB.getInstance(this.context).data.Info[localDate.toString()] = toggleButton.isChecked
+            // If Name not here, add it
+            if (!data.Info.containsKey(data.Name))
+                data.Info[data.Name] = mutableMapOf()
+            // Add date and here or not
+            data.Info[data.Name]?.set(date, toggleButton.isChecked)
         }
-        toggleButton.isChecked = DEFAULT_VALUE
 
-        val info = DB.getInstance(this.context).data.Info
-        if(info.contains(localDate.toString()))
-        {
-            toggleButton.isChecked = info[localDate.toString()] == true
-        }
+        toggleButton.text = NOT_REPORTED
+        if (data.Info[data.Name]?.contains(date) == true)
+            toggleButton.isChecked = (data.Info[data.Name]?.get(date) == true)
     }
-
 }

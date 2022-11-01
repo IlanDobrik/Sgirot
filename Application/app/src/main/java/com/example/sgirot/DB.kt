@@ -2,14 +2,25 @@ package com.example.sgirot
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import java.io.File
-import java.net.Socket
 
 /*
+Option 1
+[
+    (Name, Date, Base/home),
+    ..
+]
+
+
+Option 2
 {
 "Info" : {
-    DATE : BASE/HOME
-    ...
+    "NAME" : {
+        "DATE" : BASE/HOME
+        ...
+            }
+        }
     },
 "Settings" : {
     "DefaultValue" : BASE/HOME,
@@ -17,28 +28,41 @@ import java.net.Socket
     ...
     }
 }
- */
+*/
+
+/*
+Info - Synced with server
+Settings - local changes
+Name - User name
+*/
 
 data class Asd(
-    var Info: MutableMap<String, Boolean>,
+    var Info: MutableMap<String, MutableMap<String, Boolean>>,
     var Settings: MutableMap<String, Int>,
     var Name: String)
 
 class DB private constructor(context: Context) {
     private val file = File(context.filesDir, FILE_NAME)
-    public var data = Asd(mutableMapOf(),
+    var data = Asd(mutableMapOf(),
         mutableMapOf(),
         "Name")
+    private val gson = Gson()
 
     init {
-        get_update()
-        val x = file.createNewFile()
-        if (!x){
-            val gson = Gson()
-            data = gson.fromJson(file.readText(), Asd::class.java)
+        getUpdate()
+        file.createNewFile()
+        try {
+            var temp = gson.fromJson(file.readText(), Asd::class.java)
+            // temp = null // Uncomment to reset DB - Close app to empty DB
+            if (temp != null)
+                data = temp
         }
-    }
+        catch (e : JsonSyntaxException) {
+            // TODO save to debug file / Send file
+        }
+        }
 
+    // Singleton
     companion object {
         private var instance: DB? = null
 
@@ -52,22 +76,13 @@ class DB private constructor(context: Context) {
 
     fun save()
     {
-        val gson = Gson()
         file.writeText(gson.toJson(this.data))
     }
 
-    fun get_update()
+    fun getUpdate()
     {
-        try {
-            // TODO pull data
-            val socket = Socket(IP, PORT)
-            socket.getOutputStream().write(Gson().toJson(this.data).toByteArray())
+        val buff = recvData()
 
-            // TODO Write to DB
-        }
-        catch (e: Exception)
-        {
-            // Do nothing
-        }
+        // TODO Write to DB
     }
 }

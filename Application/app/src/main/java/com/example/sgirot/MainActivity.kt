@@ -2,13 +2,13 @@ package com.example.sgirot
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.google.gson.Gson
-import java.net.Socket
 
 
 class MainActivity : AppCompatActivity()
@@ -17,20 +17,7 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Name
-        val name : EditText = findViewById(R.id.editTextTextPersonName)
-        val savedName = DB.getInstance(this).data.Name
-        name.setText(savedName)
-        name.doAfterTextChanged {
-            DB.getInstance(this).data.Name = name.text.toString()
-        }
-
-        // Weekend list
-        val listView = findViewById<View>(R.id.weekend_list) as ListView
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            // Do something in response to the click
-        }
-        listView.adapter = MyAdapter(this, getWeekends().take(ROWS_COUNT).toList())
+        formatActivity()
     }
 
     override fun onStop() {
@@ -41,6 +28,8 @@ class MainActivity : AppCompatActivity()
         db.save()
 
         // Send data - Cant do on main thread
+        // TODO move to function
+        // TODO coroutine?
         val thread = Thread {
             try {
                 sendData(Gson().toJson(db.data).toByteArray())
@@ -49,6 +38,33 @@ class MainActivity : AppCompatActivity()
             }
         }
         thread.start()
+    }
+
+    private fun formatActivity()
+    {
+        val version : TextView = findViewById(R.id.versionText)
+        version.text = VERSION
+
+        // Name
+        val name : EditText = findViewById(R.id.editTextTextPersonName)
+        val savedName = DB.getInstance(this).data.Name
+        name.setText(savedName)
+        name.doAfterTextChanged {
+            DB.getInstance(this).data.Name = name.text.toString()
+            // formatActivity() // TODO remake weekendlist
+        }
+
+        // Weekend list
+        val context = this
+        val weekends = getWeekends().take(ROWS_COUNT).toList()
+        val listView = findViewById<View>(R.id.weekend_list) as ListView
+        listView.adapter = MyAdapter(this, weekends)
+        listView.isClickable = true // TODO is needed?
+        listView.onItemClickListener =
+            OnItemClickListener { parent, view, position, id ->
+                val intent = ReportActivity.newIntent(context, weekends[position], position)
+                startActivity(intent)
+            }
     }
 
     fun settingsClick()

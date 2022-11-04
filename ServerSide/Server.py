@@ -15,6 +15,27 @@ S:  GET - Send DB
 *END*
 '''
 
+'''
+DB
+{
+    "Name" : 
+    {
+        "Date1" : True/False,
+        "Date2" : True/False,
+        ...
+    },
+
+    "Name2 : 
+    {
+        "Date1" : True/False,
+        "Date2" : True/False,
+        ...
+    }
+
+    ...
+}
+'''
+
 
 class DB:
     # To json
